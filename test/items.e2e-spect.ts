@@ -2,8 +2,10 @@ import { Test, TestingModule } from "@nestjs/testing";
 import * as request from "supertest";
 import { ItemsModule } from "../src/items/items.module";
 import { MongooseModule } from "@nestjs/mongoose";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { GraphQLModule } from "@nestjs/graphql";
 import { Item } from "../src/items/interfaces/item.interface";
+import { databaseUrl } from "../src/config";
 
 describe("ItemsController (e2e)", () => {
   let app;
@@ -12,8 +14,9 @@ describe("ItemsController (e2e)", () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         ItemsModule,
-        MongooseModule.forRoot("mongodb://localhost/nestgraphqltesting"),
-        GraphQLModule.forRoot({
+        MongooseModule.forRoot(databaseUrl),
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: ApolloDriver,
           autoSchemaFile: "schema.gql",
         }),
       ],
